@@ -42,6 +42,7 @@ git clone https://github.com/pradyroy/imagefox.git
 cd imagefox
 python3 -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r dev-requirements.txt
 pip install -r requirements.txt
 ```
 

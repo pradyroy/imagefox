@@ -15,6 +15,7 @@ git clone https://github.com/pradyroy/imagefox.git
 cd imagefox
 python -m venv venv
 source venv/bin/activate
+pip install -r dev-requirements.txt
 pip install -r requirements.txt
 ```
 
