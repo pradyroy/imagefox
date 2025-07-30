@@ -1,0 +1,21 @@
+# EditorConfig helps maintain consistent coding styles between different editors and IDEs
+# https://editorconfig.org
+
+root = true
+
+# ✨ Default settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# 📒 Markdown files — allow trailing whitespace for manual line breaks
+[*.md]
+trim_trailing_whitespace = false
+
+# 🔧 Config files (JSON, YAML, TOML) — use 2 spaces
+[*.{json,yml,yaml,toml}]
+indent_size = 2

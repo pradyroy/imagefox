@@ -1,0 +1,84 @@
+# 🐍 Python & Bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*$py.class
+*.egg
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+.Python
+
+# 🧪 Build & Packaging
+build/
+dist/
+develop-eggs/
+downloads/
+pip-wheel-metadata/
+site/
+wheels/
+share/python-wheels/
+
+# 📦 Virtual Environments
+env/
+ENV/
+venv/
+venv.bak/
+.venv/
+.venv.bak/
+.venv.local/
+.pdm-python
+.pixi
+
+# 🧪 Testing & Linting
+.cache/
+.tox/
+.nox/
+.pytest_cache/
+.mypy_cache/
+.pyright/
+.coverage*
+htmlcov/
+test-results/
+pytestdebug.log
+
+# 🛠️ Editors & IDEs
+.idea/
+*.code-workspace
+*.iml
+.ropeproject
+.spyderproject
+.spyproject
+
+# 📋 Logs, Backups, Temps
+*.log
+*.bak
+*.tmp
+*.swp
+*.swo
+*.orig
+
+# 🔒 Secrets & Config
+.env
+.env.*
+.secrets/
+*.pem
+*.key
+*.crt
+
+# 🍎 macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# 🪟 Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk

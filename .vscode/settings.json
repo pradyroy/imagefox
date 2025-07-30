@@ -1,0 +1,48 @@
+{
+  // --------------------------------------
+  // ✨ Editor Behavior
+  // --------------------------------------
+  "editor.formatOnSave": true,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 4,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/venv": true,
+    "**/.venv": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true
+  },
+
+  // --------------------------------------
+  // 🐍 Python Formatting & Linting
+  // --------------------------------------
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": ["--line-length", "88"],
+  "python.linting.enabled": true,
+  "python.linting.ruffEnabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": false,
+  "python.linting.mypyEnabled": true,
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.languageServer": "Pylance",
+
+  // --------------------------------------
+  // 🧠 IntelliSense & Import Sorting
+  // --------------------------------------
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.completeFunctionParens": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+
+  // --------------------------------------
+  // 💻 Terminal & Python Path
+  // --------------------------------------
+  "terminal.integrated.inheritEnv": true,
+  "python.defaultInterpreterPath": "venv/bin/python"
+}
