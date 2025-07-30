@@ -14,7 +14,9 @@ import piexif
 from PIL import Image
 
 
-def compress_image(input_path: str, output_path: str, quality: int = 75, resize: str = None) -> None:
+def compress_image(
+    input_path: str, output_path: str, quality: int = 75, resize: str = None
+) -> None:
     """
     Compress an image by reducing its quality and optionally resizing.
 
@@ -31,7 +33,7 @@ def compress_image(input_path: str, output_path: str, quality: int = 75, resize:
     try:
         img = Image.open(input_path)
         if resize:
-            width, height = map(int, resize.lower().split('x'))
+            width, height = map(int, resize.lower().split("x"))
             print(f"[INFO] Resizing image to {width}x{height}")
             img = img.resize((width, height), Image.LANCZOS)
 
@@ -66,25 +68,43 @@ def convert_image(input_path: str, output_path: str, format: str) -> None:
 
 def read_metadata(input_path: str) -> dict:
     """
-    Read EXIF metadata from an image.
+    Read and parse EXIF metadata from an image, formatting tag IDs to human-readable names.
 
     Args:
-        input_path (str): Path to the image file.
+        input_path (str): Path to the input image.
 
     Returns:
-        dict: Parsed EXIF data as a dictionary.
+        dict: Dictionary with EXIF sections and their human-readable tag-value pairs.
 
     Raises:
-        IOError: If EXIF data cannot be read.
+        IOError: If the image or EXIF data cannot be read.
     """
     print(f"[INFO] Reading metadata from: {input_path}")
     try:
         exif_dict = piexif.load(input_path)
         print(f"[INFO] Metadata keys found: {list(exif_dict.keys())}")
-        return exif_dict
+
+        readable_metadata = {}
+
+        for section, tags in exif_dict.items():
+            if isinstance(tags, dict):
+                readable_section = {}
+                for tag_id, value in tags.items():
+                    tag_name = (
+                        piexif.TAGS.get(section, {})
+                        .get(tag_id, {})
+                        .get("name", f"Tag-{tag_id}")
+                    )
+                    readable_section[tag_name] = value
+                readable_metadata[section] = readable_section
+            else:
+                print(f"[INFO] Skipping non-dictionary section: {section}")
+
+        return readable_metadata
+
     except Exception as e:
         print(f"[ERROR] Failed to read metadata: {e}")
-        raise
+        raise IOError(f"Could not read EXIF metadata from {input_path}") from e
 
 
 def remove_metadata(input_path: str, output_path: str) -> None:
@@ -125,10 +145,12 @@ def edit_metadata(input_path: str, output_path: str, field: str, value: str) -> 
         ValueError: If tag is invalid.
         IOError: If the image can't be modified or saved.
     """
-    print(f"[INFO] Editing metadata field '{field}' to value '{value}' in: {input_path}")
+    print(
+        f"[INFO] Editing metadata field '{field}' to value '{value}' in: {input_path}"
+    )
     try:
         exif_dict = piexif.load(input_path)
-        tag_bytes = value.encode('utf-8')
+        tag_bytes = value.encode("utf-8")
 
         if field == "Model":
             exif_dict["0th"][piexif.ImageIFD.Model] = tag_bytes

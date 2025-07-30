@@ -51,27 +51,34 @@ pip install -r requirements.txt
 ## 🧰 CLI Usage
 
 ```bash
-# Compress image
-python -m imagefox compress input.jpg --quality 70 --resize 1024x768
+# 📦 Compress an image with optional resizing
+python -m imagefox compress input.jpg --output output.jpg --quality 70 --resize 1024x768
 
-# Convert format
-python -m imagefox convert input.png --to jpeg
+# 🔄 Convert an image to a different format (e.g., PNG to JPEG)
+python -m imagefox convert input.png --output output.jpeg --to jpeg
 
-# View metadata
-python -m imagefox metadata view input.jpg
+# 🔍 View EXIF metadata of an image
+python -m imagefox metadata-view input.jpg
 
-# Remove metadata
-python -m imagefox metadata remove input.jpg --output clean.jpg
+# 🧹 Remove all EXIF metadata from an image
+python -m imagefox metadata-remove input.jpg --output clean.jpg
 
-# Edit metadata (e.g., camera model)
-python -m imagefox metadata edit input.jpg --field Model --value "MyCustomCamera" --output edited.jpg
+# ✏️ Edit a specific EXIF metadata field (e.g., camera model)
+python -m imagefox metadata-edit input.jpg \
+  --field Model \
+  --value "MyCustomCamera" \
+  --output edited.jpg
 ```
 
 Use `--help` with any command:
 
 ```bash
 python -m imagefox --help
-python -m imagefox metadata --help
+python -m imagefox compress --help
+python -m imagefox metadata-view --help
+python -m imagefox metadata-remove --help
+python -m imagefox metadata-edit --help
+
 ```
 
 ---
