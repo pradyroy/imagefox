@@ -10,12 +10,14 @@ License: MIT
 """
 
 import argparse
+import json
 from imagefox.utils.image_utility import (
     compress_image,
     convert_image,
     read_metadata,
     remove_metadata,
-    edit_metadata
+    edit_metadata,
+    apply_metadata_from_json
 )
 
 
@@ -55,6 +57,11 @@ def main():
     meta_edit_parser.add_argument("--field", required=True, help="EXIF field to edit (e.g., Model)")
     meta_edit_parser.add_argument("--value", required=True, help="New value for the EXIF field")
 
+    # Sub-command: metadata write from JSON
+    meta_write_parser = subparsers.add_parser("metadata-write", help="Apply full EXIF metadata from a JSON file")
+    meta_write_parser.add_argument("input", help="Path to input image (JPEG)")
+    meta_write_parser.add_argument("--json", required=True, help="Path to JSON file containing metadata")
+
     args = parser.parse_args()
 
     # Dispatch to appropriate handler
@@ -77,6 +84,15 @@ def main():
 
     elif args.command == "metadata-edit":
         edit_metadata(args.input, args.output, args.field, args.value)
+
+    elif args.command == "metadata-write":
+        try:
+            with open(args.json, "r", encoding="utf-8") as f:
+                meta_data = json.load(f)
+            apply_metadata_from_json(args.input, meta_data)
+        except Exception as e:
+            print(f"[ERROR] Failed to load metadata JSON: {e}")
+            raise
 
 
 if __name__ == "__main__":

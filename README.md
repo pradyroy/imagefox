@@ -52,22 +52,54 @@ pip install -r requirements.txt
 
 ```bash
 # 📦 Compress an image with optional resizing
-python -m imagefox compress input.jpg --output output.jpg --quality 70 --resize 1024x768
+python -m imagefox compress input.jpg \
+  --output output.jpg \
+  --quality 70 \
+  --resize 1024x768
 
 # 🔄 Convert an image to a different format (e.g., PNG to JPEG)
-python -m imagefox convert input.png --output output.jpeg --to jpeg
+python -m imagefox convert input.png \
+  --output output.jpeg \
+  --to jpeg
 
 # 🔍 View EXIF metadata of an image
 python -m imagefox metadata-view input.jpg
 
 # 🧹 Remove all EXIF metadata from an image
-python -m imagefox metadata-remove input.jpg --output clean.jpg
+python -m imagefox metadata-remove input.jpg \
+  --output clean.jpg
 
 # ✏️ Edit a specific EXIF metadata field (e.g., camera model)
 python -m imagefox metadata-edit input.jpg \
   --field Model \
   --value "MyCustomCamera" \
   --output edited.jpg
+
+# 📝 Write full EXIF metadata from a JSON file (overwrites in-place)
+python -m imagefox metadata-write input.jpg \
+  --json metadata.json
+```
+
+```json
+{
+  "0th": {
+    "Artist": "Pradyumna Das Roy",
+    "Copyright": "Trilp AI",
+    "Make": "Nikon",
+    "Model": "COOLPIX P900",
+    "ImageDescription": "Sunset at the lake",
+    "Software": "ImageFox 1.0",
+    "DateTime": "2025:07:29 18:30:00"
+  },
+  "Exif": {
+    "DateTimeOriginal": "2025:07:29 18:30:00",
+    "UserComment": "A calm sunset view captured while hiking."
+  },
+  "GPS": {
+    "Latitude": 22.58245,
+    "Longitude": 88.37009
+  }
+}
 ```
 
 Use `--help` with any command:
@@ -75,10 +107,11 @@ Use `--help` with any command:
 ```bash
 python -m imagefox --help
 python -m imagefox compress --help
+python -m imagefox convert --help
 python -m imagefox metadata-view --help
 python -m imagefox metadata-remove --help
 python -m imagefox metadata-edit --help
-
+python -m imagefox metadata-write --help
 ```
 
 ---

@@ -12,6 +12,7 @@ License: MIT
 import os
 import piexif
 from PIL import Image
+from fractions import Fraction
 
 
 def compress_image(
@@ -166,3 +167,64 @@ def edit_metadata(input_path: str, output_path: str, field: str, value: str) -> 
     except Exception as e:
         print(f"[ERROR] Failed to edit metadata: {e}")
         raise
+
+
+def _deg_to_dms_rational(deg_float):
+    """
+    Convert decimal degrees to EXIF-compatible DMS format with rational numbers.
+    """
+    deg = int(deg_float)
+    min_float = (deg_float - deg) * 60
+    minute = int(min_float)
+    sec_float = (min_float - minute) * 60
+    sec = Fraction(round(sec_float, 4)).limit_denominator(10000)
+    return [(deg, 1), (minute, 1), (sec.numerator, sec.denominator)]
+
+
+def apply_metadata_from_json(image_path: str, metadata_json: dict) -> None:
+    """
+    Apply EXIF metadata to a JPEG image using a structured JSON input.
+
+    Args:
+        image_path (str): Path to the JPEG image to update (in-place).
+        metadata_json (dict): Dictionary containing "0th", "Exif", and optional GPS ("Latitude", "Longitude").
+
+    Raises:
+        IOError: If the image cannot be opened or metadata cannot be applied.
+    """
+    print(f"[INFO] Applying metadata to: {image_path}")
+    try:
+        # Initialize empty EXIF dictionary
+        exif_dict = {"0th": {}, "Exif": {}, "GPS": {}, "1st": {}, "Interop": {}}
+
+        # Handle 0th and Exif tags using piexif.TAGS
+        for ifd in ["0th", "Exif"]:
+            for key, val in metadata_json.get(ifd, {}).items():
+                for tag_id, tag_info in piexif.TAGS[ifd].items():
+                    if tag_info["name"] == key:
+                        if isinstance(val, str):
+                            val = val.encode("utf-8")
+                        exif_dict[ifd][tag_id] = val
+                        break
+
+        # Handle optional GPS conversion from decimal
+        gps = metadata_json.get("GPS", {})
+        if "Latitude" in gps and "Longitude" in gps:
+            lat = gps["Latitude"]
+            lng = gps["Longitude"]
+            exif_dict["GPS"][piexif.GPSIFD.GPSLatitudeRef] = b"N" if lat >= 0 else b"S"
+            exif_dict["GPS"][piexif.GPSIFD.GPSLatitude] = _deg_to_dms_rational(abs(lat))
+            exif_dict["GPS"][piexif.GPSIFD.GPSLongitudeRef] = b"E" if lng >= 0 else b"W"
+            exif_dict["GPS"][piexif.GPSIFD.GPSLongitude] = _deg_to_dms_rational(
+                abs(lng)
+            )
+
+        # Dump EXIF and save to image
+        exif_bytes = piexif.dump(exif_dict)
+        img = Image.open(image_path)
+        img.save(image_path, exif=exif_bytes)
+        print(f"[SUCCESS] Metadata applied successfully to: {image_path}")
+
+    except Exception as e:
+        print(f"[ERROR] Failed to apply metadata: {e}")
+        raise IOError(f"Could not apply metadata to {image_path}") from e
